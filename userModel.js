@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   first_Name: {
@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 });
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     //update profile
     next();
   }
@@ -40,19 +40,19 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-require('dotenv').config({ path: '.env' });
+require("dotenv").config({ path: ".env" });
 
-if (typeof localStorage === 'undefined' || localStorage === null) {
-  const LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./scratch');
+if (typeof localStorage === "undefined" || localStorage === null) {
+  const LocalStorage = require("node-localstorage").LocalStorage;
+  localStorage = new LocalStorage("./scratch");
 }
 userSchema.methods.getJWTToken = function () {
-  const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET);
-  return localStorage.setItem('token', token);
+  const token = jwt.sign({ id: this._id }, process.env.JWT_);
+  return localStorage.setItem("token", token);
 };
 
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
