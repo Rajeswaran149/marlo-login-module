@@ -9,6 +9,9 @@ dotenv.config({ path: ".env" });
 app.use(cors());
 
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("web server is running");
+});
 
 connectDatabase();
 
